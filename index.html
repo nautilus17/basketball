@@ -1,0 +1,1003 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Archivo:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+  :root{
+    --bg:#232A2C;
+    --bg2:#2C3436;
+    --bg3:#363E40;
+    --line:#49514F;
+    --ink:#12161A;
+    --paper:#F4F6F3;
+    --dim:#9AA3A0;
+    --mark:#4FA8C4;
+    --markDark:#0F5F7A;
+    --red:#D64B41;
+    --posC:#2E7F9C;
+    --posF:#C1564C;
+    --posG:#4E8757;
+    --disp:'Black Han Sans','Pretendard',sans-serif;
+    --num:'Archivo',sans-serif;
+    --body:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:var(--body);background:var(--bg);
+    background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+    background-size:44px 44px;color:var(--paper);-webkit-font-smoothing:antialiased;
+  }
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 0%,rgba(255,255,255,.06),rgba(255,255,255,0) 65%)}
+  .app{max-width:600px;margin:0 auto;padding:24px 16px 80px;position:relative}
+
+  header{border-bottom:3px solid var(--paper);padding-bottom:14px}
+  .eyebrow{font-family:var(--num);font-weight:600;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--mark);margin-bottom:2px}
+  h1{font-family:var(--disp);font-size:38px;line-height:1;color:var(--paper)}
+  .status{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+  .status .n{font-family:var(--num);font-weight:800;font-size:34px;line-height:1;color:var(--paper)}
+  .status .txt{font-size:13px;color:var(--dim)}
+  .status .mode{margin-left:auto;font-family:var(--num);font-weight:800;font-size:12px;
+    letter-spacing:.1em;background:var(--paper);color:var(--ink);padding:5px 10px}
+
+  .sec-head{display:flex;align-items:center;gap:10px;margin:26px 0 8px}
+  h2{font-family:var(--disp);font-size:17px;color:var(--paper)}
+  .sec-head .rule{flex:1;height:1px;background:var(--line)}
+  .bulk{display:flex;gap:6px}
+  .bulk button{font-family:var(--body);font-size:11px;font-weight:700;padding:5px 9px;
+    border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer}
+  .bulk button:hover{background:var(--bg3);color:var(--paper)}
+  .bulk button:focus-visible{outline:2px solid var(--mark);outline-offset:1px}
+
+  ul{list-style:none}
+  .grp{font-family:var(--num);font-weight:800;font-size:10px;letter-spacing:.18em;
+    color:var(--dim);margin:16px 0 6px;display:flex;align-items:center;gap:8px}
+  .grp::after{content:'';flex:1;height:1px;background:var(--line)}
+
+  .member{display:flex;align-items:center;gap:9px;
+    background:var(--bg2);border-left:4px solid #4E5658;color:var(--dim);
+    padding:9px 10px;margin-bottom:4px;cursor:pointer;
+    transition:background .12s,border-color .12s,color .12s,box-shadow .12s}
+  .member:hover{background:var(--bg3);color:var(--paper)}
+  .member.in{background:var(--paper);border-left-color:var(--mark);color:var(--ink);
+    box-shadow:0 1px 4px rgba(0,0,0,.35)}
+  .member.in .name{font-weight:700}
+  .member.in .ht{color:#5C6569}
+  .member.in .lock{color:var(--markDark)}
+  .member:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+  .check{width:17px;height:17px;flex:none;border:2px solid #5A6462;display:grid;place-items:center;
+    background:#1E2426}
+  .member.in .check{background:var(--mark);border-color:var(--mark)}
+  .check svg{width:10px;height:10px;stroke:#12161A;stroke-width:3;fill:none;display:none}
+  .member.in .check svg{display:block}
+  .pos{font-family:var(--num);font-weight:800;font-size:10px;color:#fff;
+    width:17px;height:17px;flex:none;display:grid;place-items:center;opacity:.6}
+  .member.in .pos{opacity:1}
+  .pos.c{background:var(--posC)}.pos.f{background:var(--posF)}.pos.g{background:var(--posG)}
+  .name{font-weight:600;font-size:15px;color:inherit}
+  .lock{font-size:10px;color:var(--mark);font-weight:700}
+  .ht{font-family:var(--num);font-size:11px;color:inherit;opacity:.75}
+
+  .io{margin-top:16px}
+  .io summary{font-size:13px;font-weight:700;cursor:pointer;padding:8px 0;color:var(--dim)}
+  .io summary:hover{color:var(--paper)}
+  .io summary:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+  .io textarea{width:100%;height:110px;font-family:ui-monospace,Menlo,monospace;font-size:12px;
+    padding:9px;border:1px solid var(--line);background:#1B2123;color:var(--paper);resize:vertical}
+  .io p{font-size:12px;color:var(--dim);line-height:1.65;margin:6px 0 8px}
+  .io .row{display:flex;gap:6px;margin-top:8px}
+  .io .row input{flex:1;min-width:0;font-family:var(--body);font-size:14px;padding:9px 10px;
+    border:1px solid var(--line);background:#1B2123;color:var(--paper)}
+  .io .row button{font-family:var(--body);font-weight:700;font-size:13px;padding:9px 14px;
+    border:0;background:var(--paper);color:var(--ink);cursor:pointer;white-space:nowrap}
+  .io .row button.ghost{background:transparent;color:var(--paper);border:1px solid var(--line)}
+  .io :focus-visible{outline:2px solid var(--mark);outline-offset:1px}
+
+  .rulelist li{display:flex;align-items:center;gap:8px;background:var(--bg2);
+    padding:8px 10px;margin-bottom:4px;font-size:14px;font-weight:600;color:var(--paper)}
+  .rulelist li.bad{background:#452926;border-left:3px solid var(--red)}
+  .rulelist .why{font-size:11px;font-weight:400;color:#E4938C}
+  .rulelist button{margin-left:auto;border:0;background:none;color:var(--dim);
+    font-size:17px;line-height:1;cursor:pointer;padding:2px 4px}
+  .rulelist button:hover{color:var(--red)}
+
+  .wt{display:grid;grid-template-columns:66px 1fr 34px;gap:8px;align-items:center;
+    font-size:12px;margin-bottom:7px;color:var(--dim)}
+  .wt input{width:100%;accent-color:var(--mark)}
+  .wt b{font-family:var(--num);font-weight:800;text-align:right;color:var(--paper)}
+
+  .go{width:100%;margin-top:26px;padding:18px;border:0;cursor:pointer;
+    font-family:var(--disp);font-size:22px;letter-spacing:.04em;
+    background:var(--paper);color:var(--ink);transition:transform .1s}
+  .go:active{transform:translateY(2px)}
+  .go:disabled{background:#3B4345;color:#727A77;cursor:not-allowed}
+  .go:focus-visible{outline:3px solid var(--mark);outline-offset:3px}
+
+  #result{margin-top:30px}
+  .warn{background:var(--red);color:#fff;padding:12px 14px;margin-bottom:14px;
+    font-size:13px;line-height:1.6}
+  .warn b{font-weight:800}
+  .jersey{margin-bottom:14px;padding-bottom:14px;
+    clip-path:polygon(0 0,40% 0,50% 12%,60% 0,100% 0,100% 100%,0 100%);
+    box-shadow:0 2px 6px rgba(0,0,0,.4);animation:rise .32s ease-out both}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .jersey.c-white{background:var(--paper);color:var(--ink)}
+  .jersey.c-black{background:#14181A;color:var(--paper);outline:1px solid #414A4C;outline-offset:-1px}
+  .jersey.c-red{background:var(--red);color:#fff}
+  .j-head{padding:32px 16px 4px;display:flex;align-items:flex-end;gap:10px}
+  .j-name{font-family:var(--disp);font-size:26px;line-height:1}
+  .j-meta{font-family:var(--num);font-weight:600;font-size:11px;letter-spacing:.06em;
+    opacity:.8;margin-left:auto;text-align:right;line-height:1.6}
+  .j-list{padding:8px 16px 0;display:flex;flex-direction:column;gap:3px}
+  .j-list li{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;
+    padding:6px 9px;background:rgba(255,255,255,.13);cursor:pointer}
+  .jersey.c-white .j-list li{background:rgba(20,22,26,.07)}
+  .j-list li.sel{outline:2px dashed currentColor;outline-offset:-2px}
+  .j-list .tag{font-family:var(--num);font-weight:800;font-size:10px;opacity:.7}
+  .j-list .num{margin-left:auto;font-family:var(--num);font-weight:800;font-size:13px;opacity:.85}
+  .swap-hint{font-size:12px;color:var(--dim);margin:2px 0 12px;text-align:center}
+
+  .actions{display:flex;gap:8px;margin-top:16px}
+  .actions button{flex:1;font-family:var(--body);font-weight:700;font-size:14px;padding:13px;
+    border:2px solid var(--paper);background:transparent;color:var(--paper);cursor:pointer}
+  .actions button:active{background:var(--paper);color:var(--ink)}
+  .actions button:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
+    background:var(--paper);color:var(--ink);padding:11px 18px;font-size:14px;font-weight:600;
+    opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="app">
+  <header>
+    <div class="eyebrow">Weekly Pickup Game</div>
+    <h1>오늘의 팀</h1>
+    <div class="status">
+      <span class="n" id="count">0</span>
+      <span class="txt">명 참석</span>
+      <span class="mode" id="mode">대기</span>
+    </div>
+  </header>
+
+  <div class="sec-head">
+    <h2>명단</h2>
+    <div class="rule"></div>
+    <div class="bulk">
+      <button type="button" id="statBtn" aria-pressed="false">팀 전력 보기</button>
+      <button type="button" id="allIn">전체 참석</button>
+      <button type="button" id="allOut">전체 불참</button>
+    </div>
+  </div>
+
+  <ul id="list"></ul>
+
+  <details class="io" id="ruleBox">
+    <summary>같은 팀 금지 규칙 <span id="ruleCount"></span></summary>
+    <p>한 줄에 묶인 사람들은 서로 다른 팀으로 갈라집니다. 이름을 쉼표로 구분해 입력하세요. 참석 인원 중 묶인 사람 수가 팀 수보다 많으면 전부 갈라놓을 수 없으므로 미리 표시됩니다.</p>
+    <ul class="rulelist" id="rules"></ul>
+    <div class="row">
+      <input id="newRule" placeholder="예) 김영종, 김세중" autocomplete="off">
+      <button type="button" id="addRule">추가</button>
+    </div>
+  </details>
+
+  <details class="io" id="bondBox">
+    <summary>같은 팀 우대 규칙 <span id="bondCount"></span></summary>
+    <p>한 줄에 묶인 사람들은 되도록 같은 팀으로 붙습니다. 절대 규칙은 아니라서 전력 균형이 크게 깨지면 떨어질 수 있고, 그 강도는 아래에서 조절합니다. 묶인 쌍은 지난주 반복 벌점에서 제외됩니다.</p>
+    <ul class="rulelist" id="bondList"></ul>
+    <div class="row">
+      <input id="newBond" placeholder="예) 안정은, 이지열" autocomplete="off">
+      <button type="button" id="addBond">추가</button>
+    </div>
+    <div class="wt" style="margin-top:14px">
+      <label for="w_bond">붙이는 힘</label>
+      <input id="w_bond" type="range" min="0" max="1200" step="50" value="400">
+      <b id="v_bond">400</b>
+    </div>
+    <div class="wt">
+      <label for="w_syn">시너지 전력</label>
+      <input id="w_syn" type="range" min="0" max="30" step="1" value="8">
+      <b id="v_syn">8</b>
+    </div>
+    <p>시너지 전력은 두 사람이 붙었을 때 그 팀 전력에 더해지는 값입니다. 0이면 단순히 붙기만 하고, 값을 올리면 그 팀이 더 세다고 보아 다른 자리에서 전력을 덜어냅니다.</p>
+  </details>
+
+  <details class="io">
+    <summary>시트에서 명단 가져오기</summary>
+    <p>구글 시트에서 헤더(position, name, pt …)를 포함해 범위를 복사한 뒤 아래에 붙여넣으세요. 헤더 이름으로 열을 찾기 때문에 열 순서가 달라도 됩니다. 참석여부가 "참석"인 사람만 참석으로 들어옵니다.</p>
+    <textarea id="paste" placeholder="여기에 붙여넣기"></textarea>
+    <div class="row">
+      <button type="button" id="importBtn">명단 교체</button>
+      <button type="button" id="resetBtn" class="ghost">기본 명단으로</button>
+    </div>
+  </details>
+
+  <details class="io">
+    <summary>전력 계산 가중치</summary>
+    <p>항목별 최고치를 기준으로 환산한 뒤 아래 비중으로 더합니다. 턴오버는 감점입니다.</p>
+    <div id="weights"></div>
+  </details>
+
+  <button class="go" id="go">팀 짜기</button>
+
+  <div id="result"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── 설정 ─────────────────────────────────────── */
+  var THREE_TEAM_MIN = 15;    // 이 인원 이상이면 3파전
+  var RESTARTS = 200;         // 편성 최적화 반복 횟수
+
+  var MAXV = { pt:40, reb:20, ass:15, stl:10, blk:5, to:10, sta:100 };
+  var W = { pt:30, reb:20, ass:20, stl:10, blk:8, sta:12, to:8 };
+  var WLABEL = { pt:'득점', reb:'리바운드', ass:'어시스트', stl:'스틸', blk:'블록', sta:'체력', to:'턴오버' };
+
+  // 편성 균형 가중치 (separate 는 사실상 절대 규칙)
+  var BAL = { power:1.0, posC:6, posF:2, posG:3, height:0.8, repeat:1.5, separate:2000 };
+
+  // 항목별(역할) 균형 — 전력 총합과 별개로 각 능력치가 고르게 퍼지도록
+  var ROLE_KEYS = ['pt','reb','ass','stl','blk'];
+  var ROLE_LABEL = { pt:'득점', reb:'리바', ass:'어시', stl:'스틸', blk:'블록' };
+  var roleStrength = 20;   // 0~100
+  var showStats = false;   // 개인 전력 수치 노출 여부
+
+  var TEAMS = [
+    { label:'흰색', cls:'c-white', emoji:'\u26AA' },
+    { label:'검은색', cls:'c-black', emoji:'\u26AB' },
+    { label:'빨간색', cls:'c-red', emoji:'\uD83D\uDD34' }
+  ];
+  var POS_KO = { c:'센터', f:'포워드', g:'가드' };
+  var POS_ORDER = ['c','f','g'];
+
+  /* ── 같은 팀 금지 규칙 ────────────────────────── */
+  var DEFAULT_RULES = [
+    ['박현진','김세중','안정은'],
+    ['한현수','진용조'],
+    ['한현수','정민혁','박현재'],
+    ['채정관','이기욱','김정수'],
+    ['김영종','김세중']
+  ];
+  var rules = DEFAULT_RULES.map(function(g){ return g.slice(); });
+
+  /* ── 같은 팀 우대(시너지) 규칙 ────────────────── */
+  var DEFAULT_BONDS = [
+    ['안정은','이지열'],
+    ['박준혁','진용조']
+  ];
+  var bonds = DEFAULT_BONDS.map(function(g){ return g.slice(); });
+  var bondStrength = 400;   // 붙이려는 힘
+  var synergyPower = 8;     // 붙었을 때 팀 전력에 더해지는 값
+
+  /* ── 기본 명단 (시트 기준) ────────────────────── */
+  var DEFAULT_ROSTER = [
+    ['c','박현진',25,15,10,2,5,2,50,186,'미드레인지 위주, 풋워크 위주','체력이 약함, 압박에 약함',0],
+    ['c','김세중',40,15,7,2,2,2,100,184,'올라운드 플레이어','패스 플레이 부족',0],
+    ['c','안정은',15,20,7,3,3,3,80,190,'리바운드가 강력하고 수비가 좋음','야투율이 낮음, 캐치 실수가 있음',0],
+    ['f','박준혁',30,20,5,2,1,2,70,180,'골밑 플레이가 강력함, 오펜스 리바운드 가담 적극적','체력 이슈',0],
+    ['f','김성우',5,10,5,10,1,3,80,172,'수비가 강력함','공격의 적극성 부족(야투시도 적음)',0],
+    ['f','김상원',20,10,7,2,0,1,100,178,'에너지 넘치는 플레이, 클러치 타임에 강함','3점슛의 기복이 있음',0],
+    ['f','박승규',10,10,5,2,0,2,80,179,'결정적인 한방, 중거리 슛이 좋음','참석률 부족',0],
+    ['f','이지열',30,15,10,5,2,1,100,177,'올라운드 플레이어, 3점을 제외한 모든 플레이 우수','없음',0],
+    ['f','김정수',5,5,2,1,0,5,70,175,'수비가 좋음','무리한 공격',0],
+    ['f','이주성',15,10,5,2,0,2,100,180,'리바운드가 강력, 운동 능력을 이용한 속공 참여 좋음','골밑슛에 편중됨',0],
+    ['f','김석주',10,15,10,5,2,3,80,183,'수비가 좋음, 골밑에서의 패스 플레이가 좋음','',0],
+    ['f','고명현',15,10,5,1,1,5,80,184,'드라이브인이 좋음','패스미스가 많음',0],
+    ['f','신재호',15,15,3,3,0,3,80,178,'수비가 좋고 미드레인지 위주','시야가 넓지 않음',0],
+    ['f','서우석',15,15,5,3,1,1,80,178,'수비가 좋음, 3점슛 가능, 게임 리딩 가능','',0],
+    ['g','진용조',40,10,7,5,2,2,100,182,'올라운드 플레이어, 3점 능력 좋음','게임이 안풀리면 무리한 플레이로 보여질수 있음',0],
+    ['g','정민혁',20,5,15,10,1,2,90,175,'리딩이 좋고 수비가 강력함','중거리 슛에 기복이 있음',0],
+    ['g','박영한',20,2,3,3,0,2,80,172,'속공 플레이, 미드레인지 위주','중거리 슛에 기복이 있음',0],
+    ['g','한현수',20,2,15,3,0,3,80,172,'3점 능력이 좋음','장거리 패스 실책',0],
+    ['g','김영종',20,2,5,2,0,2,100,175,'속공 능력이 좋음','캐치 실수가 많음',0],
+    ['g','김중훈',15,5,5,3,2,2,80,180,'미드레인지 위주','적극성 부족',0],
+    ['g','박현재',20,5,15,5,0,2,90,180,'리딩이 좋고 3점 성공률은 중간, 속공 마무리 좋음','3점슛 기복',0],
+    ['g','남궁 헌',10,2,15,1,0,3,50,175,'리딩이 좋고 3점이 좋음','체력부족',0],
+    ['g','이기욱',4,2,0,0,0,10,50,170,'없음','공격 흐름을 끊는 플레이, 어중간한 움직임',0],
+    ['g','채정관',2,1,0,0,0,5,70,170,'적극적인 수비','위험한 플레이, 자신없는 슛',0]
+  ];
+
+  function fromRow(r){
+    return { id:'m'+r[1], pos:r[0], name:r[1], pt:+r[2], reb:+r[3], ass:+r[4],
+             stl:+r[5], blk:+r[6], to:+r[7], sta:+r[8], ht:+r[9],
+             pro:r[10]||'', con:r[11]||'', here:!!r[12] };
+  }
+
+  // 장기 불참으로 명단에서 뺀 사람 (브라우저에 저장된 옛 명단에서도 제거)
+  var REMOVED = ['후니임'];
+
+  var members = DEFAULT_ROSTER.map(fromRow);
+  var lastPairs = {};
+  var storeOK = !!(window.storage);
+
+  var $list=document.getElementById('list'), $count=document.getElementById('count'),
+      $mode=document.getElementById('mode'), $go=document.getElementById('go'),
+      $result=document.getElementById('result'), $toast=document.getElementById('toast'),
+      $weights=document.getElementById('weights'), $paste=document.getElementById('paste'),
+      $rules=document.getElementById('rules'), $ruleCount=document.getElementById('ruleCount'),
+      $newRule=document.getElementById('newRule');
+
+  /* ── 전력 계산 ────────────────────────────────── */
+  function power(m){
+    return m.pt/MAXV.pt*W.pt + m.reb/MAXV.reb*W.reb + m.ass/MAXV.ass*W.ass
+         + m.stl/MAXV.stl*W.stl + m.blk/MAXV.blk*W.blk + m.sta/MAXV.sta*W.sta
+         - m.to/MAXV.to*W.to;
+  }
+  function maxPower(){
+    var mx=1;
+    members.forEach(function(m){ mx=Math.max(mx,power(m)); });
+    return mx;
+  }
+  function attending(){ return members.filter(function(m){ return m.here; }); }
+  function teamCount(n){ return n>=THREE_TEAM_MIN ? 3 : 2; }
+  function findMember(name){
+    for(var i=0;i<members.length;i++) if(members[i].name===name) return members[i];
+    return null;
+  }
+
+  /* ── 저장 ─────────────────────────────────────── */
+  function save(){
+    if(!storeOK) return;
+    window.storage.set('bball5:roster', JSON.stringify(members)).catch(function(){});
+    window.storage.set('bball5:weights', JSON.stringify(W)).catch(function(){});
+    window.storage.set('bball5:rules', JSON.stringify(rules)).catch(function(){});
+    window.storage.set('bball5:role', String(roleStrength)).catch(function(){});
+    window.storage.set('bball5:showstats', showStats?'1':'0').catch(function(){});
+    window.storage.set('bball5:bonds', JSON.stringify(bonds)).catch(function(){});
+    window.storage.set('bball5:bondcfg', JSON.stringify([bondStrength,synergyPower])).catch(function(){});
+  }
+  function savePairs(){
+    if(!storeOK) return;
+    window.storage.set('bball5:lastpairs', JSON.stringify(lastPairs)).catch(function(){});
+  }
+  function load(){
+    if(!storeOK){ boot(); return; }
+    Promise.all([
+      window.storage.get('bball5:roster').catch(function(){return null}),
+      window.storage.get('bball5:weights').catch(function(){return null}),
+      window.storage.get('bball5:rules').catch(function(){return null}),
+      window.storage.get('bball5:lastpairs').catch(function(){return null}),
+      window.storage.get('bball5:role').catch(function(){return null}),
+      window.storage.get('bball5:bonds').catch(function(){return null}),
+      window.storage.get('bball5:bondcfg').catch(function(){return null}),
+      window.storage.get('bball5:showstats').catch(function(){return null})
+    ]).then(function(r){
+      try{ if(r[0]&&r[0].value){ var v=JSON.parse(r[0].value); if(v.length) members=v; } }catch(e){}
+      members=members.filter(function(m){ return REMOVED.indexOf(m.name)<0; });
+      try{ if(r[1]&&r[1].value){ var w=JSON.parse(r[1].value); for(var k in w) if(k in W) W[k]=w[k]; } }catch(e){}
+      try{ if(r[2]&&r[2].value){ var g=JSON.parse(r[2].value); if(g) rules=g; } }catch(e){}
+      try{ if(r[3]&&r[3].value) lastPairs=JSON.parse(r[3].value); }catch(e){}
+      try{ if(r[4]&&r[4].value){ var rv=parseInt(r[4].value,10); if(!isNaN(rv)) roleStrength=rv; } }catch(e){}
+      try{ if(r[5]&&r[5].value){ var bv=JSON.parse(r[5].value); if(bv) bonds=bv; } }catch(e){}
+      try{ if(r[6]&&r[6].value){ var cv=JSON.parse(r[6].value); bondStrength=cv[0]; synergyPower=cv[1]; } }catch(e){}
+      try{ if(r[7]&&r[7].value) showStats = r[7].value==='1'; }catch(e){}
+      boot();
+    });
+  }
+
+  /* ── 분리 규칙 → 금지 쌍 ──────────────────────── */
+  function pairKey(a,b){ return a<b ? a+'|'+b : b+'|'+a; }
+
+  function sepPairs(){
+    var set={};
+    rules.forEach(function(g){
+      var ids=[];
+      g.forEach(function(nm){
+        var m=findMember(nm);
+        if(m && m.here) ids.push(m.id);
+      });
+      for(var i=0;i<ids.length;i++)
+        for(var j=i+1;j<ids.length;j++)
+          set[pairKey(ids[i],ids[j])]=1;
+    });
+    return set;
+  }
+
+  function bondPairs(){
+    var set={};
+    bonds.forEach(function(g){
+      var ids=[];
+      g.forEach(function(nm){
+        var m=findMember(nm);
+        if(m && m.here) ids.push(m.id);
+      });
+      for(var i=0;i<ids.length;i++)
+        for(var j=i+1;j<ids.length;j++)
+          set[pairKey(ids[i],ids[j])]=1;
+    });
+    return set;
+  }
+
+  function bondStatus(g){
+    var missing=g.filter(function(nm){ return !findMember(nm); });
+    if(missing.length) return { bad:true, why:'명단에 없음: '+missing.join(', ') };
+    var sp=sepPairs(), ids=[];
+    g.forEach(function(nm){ var m=findMember(nm); if(m) ids.push(m.id); });
+    for(var i=0;i<ids.length;i++)
+      for(var j=i+1;j<ids.length;j++)
+        if(sp[pairKey(ids[i],ids[j])]) return { bad:true, why:'분리 규칙과 충돌' };
+    var out=g.filter(function(nm){ var m=findMember(nm); return m && !m.here; });
+    if(out.length) return { bad:false, why:'', off:out.join(', ')+' 불참' };
+    return { bad:false, why:'' };
+  }
+
+  function ruleStatus(g){
+    var present=g.filter(function(nm){
+      var m=findMember(nm);
+      return m && m.here;
+    });
+    var missing=g.filter(function(nm){ return !findMember(nm); });
+    var t=teamCount(attending().length);
+    if(missing.length) return { bad:true, why:'명단에 없음: '+missing.join(', ') };
+    if(present.length>t) return { bad:true, why:'참석 '+present.length+'명 / '+t+'팀이라 다 갈라놓을 수 없습니다' };
+    return { bad:false, why:'' };
+  }
+
+  /* ── 렌더: 명단 ───────────────────────────────── */
+  function render(){
+    $list.innerHTML='';
+    var locked={}, tied={};
+    rules.forEach(function(g){ g.forEach(function(nm){ locked[nm]=1; }); });
+    bonds.forEach(function(g){ g.forEach(function(nm){ tied[nm]=1; }); });
+
+    POS_ORDER.forEach(function(p){
+      var grp=members.filter(function(m){ return m.pos===p; })
+                     .sort(function(a,b){ return a.name.localeCompare(b.name,'ko'); });
+      if(!grp.length) return;
+
+      var h=document.createElement('li');
+      h.className='grp';
+      h.textContent=POS_KO[p]+' '+grp.length;
+      $list.appendChild(h);
+
+      grp.forEach(function(m){
+        var li=document.createElement('li');
+        li.className='member '+(m.here?'in':'out');
+        li.tabIndex=0;
+        li.setAttribute('role','checkbox');
+        li.setAttribute('aria-checked', m.here?'true':'false');
+        li.title = m.pro ? '특징: '+m.pro : '';
+
+        li.innerHTML=
+          '<span class="check"><svg viewBox="0 0 12 12"><polyline points="1,6 4.5,9.5 11,2.5"/></svg></span>'+
+          '<span class="pos '+m.pos+'">'+m.pos.toUpperCase()+'</span>'+
+          '<span class="name"></span>'+
+          (locked[m.name]?'<span class="lock">분리</span>':'')+
+          (tied[m.name]?'<span class="lock" style="color:#6FBF7C">결합</span>':'')+
+          '<span class="ht">'+m.ht+'</span>';
+        li.querySelector('.name').textContent=m.name;
+
+        function toggle(){ m.here=!m.here; save(); render(); renderRules(); }
+        li.onclick=toggle;
+        li.onkeydown=function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(); } };
+        $list.appendChild(li);
+      });
+    });
+
+    var n=attending().length;
+    $count.textContent=n;
+    $mode.textContent = n<4 ? '대기' : (n>=THREE_TEAM_MIN ? '3파전' : '2팀 대결');
+    $go.disabled = n<4;
+  }
+
+  /* ── 렌더: 분리 규칙 ──────────────────────────── */
+  function renderRules(){
+    $rules.innerHTML='';
+    var bad=0;
+    rules.forEach(function(g,idx){
+      var st=ruleStatus(g);
+      if(st.bad) bad++;
+      var li=document.createElement('li');
+      if(st.bad) li.className='bad';
+      var span=document.createElement('span');
+      span.textContent=g.join(' · ');
+      li.appendChild(span);
+      if(st.bad){
+        var why=document.createElement('span');
+        why.className='why';
+        why.textContent=st.why;
+        li.appendChild(why);
+      }
+      var del=document.createElement('button');
+      del.type='button';
+      del.textContent='\u00D7';
+      del.setAttribute('aria-label','규칙 삭제');
+      del.onclick=function(){ rules.splice(idx,1); save(); render(); renderRules(); };
+      li.appendChild(del);
+      $rules.appendChild(li);
+    });
+    $ruleCount.textContent = rules.length ? '('+rules.length+(bad?', 충돌 '+bad:'')+')' : '';
+    if(bad) document.getElementById('ruleBox').open=true;
+    renderBonds();
+  }
+
+  function renderBonds(){
+    var $b=document.getElementById('bondList');
+    $b.innerHTML='';
+    var bad=0;
+    bonds.forEach(function(g,idx){
+      var st=bondStatus(g);
+      if(st.bad) bad++;
+      var li=document.createElement('li');
+      if(st.bad) li.className='bad';
+      var span=document.createElement('span');
+      span.textContent=g.join(' + ');
+      li.appendChild(span);
+      if(st.bad||st.off){
+        var why=document.createElement('span');
+        why.className='why';
+        if(!st.bad) why.style.color='#5C6569';
+        why.textContent=st.bad?st.why:st.off;
+        li.appendChild(why);
+      }
+      var del=document.createElement('button');
+      del.type='button';
+      del.textContent='\u00D7';
+      del.setAttribute('aria-label','규칙 삭제');
+      del.onclick=function(){ bonds.splice(idx,1); save(); render(); renderRules(); };
+      li.appendChild(del);
+      $b.appendChild(li);
+    });
+    document.getElementById('bondCount').textContent =
+      bonds.length ? '('+bonds.length+(bad?', 충돌 '+bad:'')+')' : '';
+    if(bad) document.getElementById('bondBox').open=true;
+  }
+
+  function renderWeights(){
+    $weights.innerHTML='';
+    Object.keys(WLABEL).forEach(function(k){
+      var row=document.createElement('div');
+      row.className='wt';
+      row.innerHTML='<label for="w_'+k+'">'+WLABEL[k]+'</label>'+
+        '<input id="w_'+k+'" type="range" min="0" max="40" step="1" value="'+W[k]+'">'+
+        '<b id="v_'+k+'">'+W[k]+'</b>';
+      $weights.appendChild(row);
+      row.querySelector('input').oninput=function(){
+        W[k]=+this.value;
+        document.getElementById('v_'+k).textContent=W[k];
+        render(); save();
+      };
+    });
+
+    var rrow=document.createElement('div');
+    rrow.className='wt';
+    rrow.style.marginTop='14px';
+    rrow.style.borderTop='1px solid var(--line)';
+    rrow.style.paddingTop='12px';
+    rrow.innerHTML='<label for="w_role">역할 균형</label>'+
+      '<input id="w_role" type="range" min="0" max="100" step="5" value="'+roleStrength+'">'+
+      '<b id="v_role">'+roleStrength+'</b>';
+    $weights.appendChild(rrow);
+    rrow.querySelector('input').oninput=function(){
+      roleStrength=+this.value;
+      document.getElementById('v_role').textContent=roleStrength;
+      save();
+    };
+
+    var note=document.createElement('p');
+    note.textContent='역할 균형은 전력 총합과 별개로 득점·리바운드·어시스트·스틸·블록이 한 팀에 몰리지 않게 합니다. 0이면 총합만 맞춥니다.';
+    $weights.appendChild(note);
+  }
+
+  /* ── 편성 ─────────────────────────────────────── */
+  function teamSizes(n,t){
+    var base=Math.floor(n/t), rem=n%t, out=[];
+    for(var i=0;i<t;i++) out.push(base+(i<rem?1:0));
+    return out;
+  }
+
+  function cost(teams, ctx){
+    var t=teams.length, i, j, k, c=0;
+
+    for(i=0;i<t;i++){
+      var tm=teams[i], share=tm.length/ctx.n;
+      var sum=0, hsum=0;
+      for(j=0;j<tm.length;j++){ sum+=ctx.pw[tm[j].id]; hsum+=tm[j].ht; }
+      for(j=0;j<tm.length;j++)
+        for(k=j+1;k<tm.length;k++)
+          if(ctx.bond[pairKey(tm[j].id,tm[k].id)]) sum += synergyPower;
+
+      // 1) 전력: 인원 비율에 맞는 기대 전력 대비 편차
+      c += Math.pow(sum - ctx.totalPower*share, 2) * BAL.power;
+
+      // 2) 평균 신장 편차
+      c += Math.pow(hsum/tm.length - ctx.avgHt, 2) * BAL.height;
+
+      // 3) 포지션 쏠림
+      for(k=0;k<POS_ORDER.length;k++){
+        var p=POS_ORDER[k], cnt=0;
+        for(j=0;j<tm.length;j++) if(tm[j].pos===p) cnt++;
+        var w = p==='c' ? BAL.posC : (p==='f' ? BAL.posF : BAL.posG);
+        c += Math.pow(cnt - ctx.posTotal[p]*share, 2) * w;
+      }
+
+      // 3-b) 항목별 쏠림 (득점·리바운드·어시스트·스틸·블록)
+      if(roleStrength>0){
+        for(k=0;k<ROLE_KEYS.length;k++){
+          var rk=ROLE_KEYS[k], rs=0;
+          for(j=0;j<tm.length;j++) rs += tm[j][rk]/MAXV[rk]*100;
+          c += Math.pow(rs/tm.length - ctx.roleMean[rk], 2) * (roleStrength/100);
+        }
+      }
+
+      // 4) 같은 팀 금지 / 같은 팀 우대 / 지난주 반복
+      for(j=0;j<tm.length;j++)
+        for(k=j+1;k<tm.length;k++){
+          var key=pairKey(tm[j].id,tm[k].id);
+          if(ctx.sep[key]) c += BAL.separate;
+          if(ctx.bond[key]) c -= bondStrength;          // 우대
+          else if(lastPairs[key]) c += BAL.repeat;      // 결합 쌍은 반복 벌점 면제
+        }
+    }
+    return c;
+  }
+
+  function split(pool, sizes, ctx){
+    var arr=pool.slice(), i, j, tmp;
+    for(i=arr.length-1;i>0;i--){ j=Math.floor(Math.random()*(i+1)); tmp=arr[i]; arr[i]=arr[j]; arr[j]=tmp; }
+    var teams=[], at=0;
+    for(i=0;i<sizes.length;i++){ teams.push(arr.slice(at,at+sizes[i])); at+=sizes[i]; }
+
+    var best=cost(teams,ctx), improved=true, guard=0;
+    while(improved && guard++<40){
+      improved=false;
+      for(var a=0;a<teams.length;a++)
+        for(var b=a+1;b<teams.length;b++)
+          for(var x=0;x<teams[a].length;x++)
+            for(var y=0;y<teams[b].length;y++){
+              var p1=teams[a][x], p2=teams[b][y];
+              teams[a][x]=p2; teams[b][y]=p1;
+              var c2=cost(teams,ctx);
+              if(c2 < best-1e-9){ best=c2; improved=true; }
+              else { teams[a][x]=p1; teams[b][y]=p2; }
+            }
+    }
+    return { teams:teams, cost:best };
+  }
+
+  function violations(teams, sep){
+    var out=[];
+    teams.forEach(function(tm,ti){
+      for(var i=0;i<tm.length;i++)
+        for(var j=i+1;j<tm.length;j++)
+          if(sep[pairKey(tm[i].id,tm[j].id)])
+            out.push({ team:ti, a:tm[i].name, b:tm[j].name });
+    });
+    return out;
+  }
+
+  function makeTeams(){
+    var pool=attending();
+    var count=teamCount(pool.length);
+    var sizes=teamSizes(pool.length,count);
+
+    var ctx={ n:pool.length, pw:{}, totalPower:0, avgHt:0,
+              posTotal:{c:0,f:0,g:0}, sep:sepPairs(), bond:bondPairs(), roleMean:{} };
+    pool.forEach(function(m){
+      var p=power(m);
+      ctx.pw[m.id]=p; ctx.totalPower+=p; ctx.avgHt+=m.ht; ctx.posTotal[m.pos]++;
+    });
+    ctx.avgHt/=pool.length;
+    ROLE_KEYS.forEach(function(k){
+      var s=0;
+      pool.forEach(function(m){ s += m[k]/MAXV[k]*100; });
+      ctx.roleMean[k]=s/pool.length;
+    });
+
+    var best=null;
+    for(var r=0;r<RESTARTS;r++){
+      var got=split(pool,sizes,ctx);
+      if(!best || got.cost<best.cost) best=got;
+    }
+
+    lastPairs={};
+    best.teams.forEach(function(tm){
+      for(var i=0;i<tm.length;i++)
+        for(var j=i+1;j<tm.length;j++)
+          lastPairs[pairKey(tm[i].id,tm[j].id)]=1;
+    });
+    savePairs();
+
+    return { teams:best.teams, bad:violations(best.teams, ctx.sep) };
+  }
+
+  /* ── 결과 ─────────────────────────────────────── */
+  var current=null, picked=null;
+
+  // 전력순 정렬은 그 자체가 서열표가 되므로 항상 포지션·이름순
+  function orderFor(a,b){
+    return (POS_ORDER.indexOf(a.pos)-POS_ORDER.indexOf(b.pos))
+        || a.name.localeCompare(b.name,'ko');
+  }
+
+  function showResult(teams, bad){
+    current=teams; picked=null;
+    $result.innerHTML='';
+
+    if(bad && bad.length){
+      var w=document.createElement('div');
+      w.className='warn';
+      w.innerHTML='<b>같은 팀 금지 규칙을 다 지키지 못했습니다.</b><br>'+
+        bad.map(function(v){ return TEAMS[v.team].label+' 팀: '+v.a+' · '+v.b; }).join('<br>')+
+        '<br>참석 인원이나 규칙을 조정한 뒤 다시 짜 주세요.';
+      $result.appendChild(w);
+    }
+
+    teams.forEach(function(tm,i){
+      var meta=TEAMS[i];
+      var sum=0, ht=0;
+      tm.forEach(function(m){ sum+=power(m); ht+=m.ht; });
+      var pc=POS_ORDER.map(function(p){
+        return tm.filter(function(m){ return m.pos===p; }).length;
+      });
+
+      var card=document.createElement('div');
+      card.className='jersey '+meta.cls;
+      card.style.animationDelay=(i*0.07)+'s';
+      var bp=bondPairs(), syn=[];
+      for(var bi=0;bi<tm.length;bi++)
+        for(var bj=bi+1;bj<tm.length;bj++)
+          if(bp[pairKey(tm[bi].id,tm[bj].id)]) syn.push(tm[bi].name+'+'+tm[bj].name);
+      var prof=ROLE_KEYS.map(function(k){
+        var s=0; tm.forEach(function(m){ s+=m[k]; });
+        return ROLE_LABEL[k]+' '+s;
+      }).join(' · ');
+      var metaHtml = showStats
+        ? tm.length+'명 · 전력 '+sum.toFixed(0)+'<br>'+
+          '평균 '+(ht/tm.length).toFixed(0)+'cm · C'+pc[0]+' F'+pc[1]+' G'+pc[2]+'<br>'+
+          prof+(syn.length?'<br>시너지 '+syn.join(', '):'')
+        : tm.length+'명 · 평균 '+(ht/tm.length).toFixed(0)+'cm';
+      card.innerHTML='<div class="j-head"><span class="j-name">'+meta.label+'</span>'+
+        '<span class="j-meta">'+metaHtml+'</span></div>';
+
+      var ul=document.createElement('ul');
+      ul.className='j-list';
+      tm.slice().sort(orderFor).forEach(function(m){
+        var li=document.createElement('li');
+        li.innerHTML='<span class="tag">'+m.pos.toUpperCase()+'</span><span class="nm"></span>'+
+                     '';
+        li.querySelector('.nm').textContent=m.name;
+        li.title = m.pro ? '특징: '+m.pro : '';
+        li.onclick=function(){ pick(m,i,li); };
+        ul.appendChild(li);
+      });
+      card.appendChild(ul);
+      $result.appendChild(card);
+    });
+
+    var hint=document.createElement('div');
+    hint.className='swap-hint';
+    hint.textContent='선수 두 명을 차례로 누르면 서로 자리를 바꿉니다';
+    $result.appendChild(hint);
+
+    var act=document.createElement('div');
+    act.className='actions';
+    act.innerHTML='<button type="button" id="again">다시 짜기</button>'+
+                  '<button type="button" id="copy">텍스트 복사</button>';
+    $result.appendChild(act);
+    document.getElementById('again').onclick=run;
+    document.getElementById('copy').onclick=copyText;
+
+    $result.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function pick(m, ti, el){
+    if(!picked){
+      picked={ m:m, ti:ti, el:el };
+      el.classList.add('sel');
+      return;
+    }
+    if(picked.m===m){ el.classList.remove('sel'); picked=null; return; }
+    if(picked.ti===ti){
+      picked.el.classList.remove('sel');
+      picked={ m:m, ti:ti, el:el };
+      el.classList.add('sel');
+      toast('같은 팀끼리는 바꿀 수 없습니다');
+      return;
+    }
+    var a=current[picked.ti], b=current[ti];
+    a[a.indexOf(picked.m)]=m;
+    b[b.indexOf(m)]=picked.m;
+    picked=null;
+    var bad=violations(current, sepPairs());
+    showResult(current, bad);
+    toast(bad.length ? '자리를 바꿨습니다 (금지 규칙 위반)' : '자리를 바꿨습니다');
+  }
+
+  function resultText(){
+    var d=new Date();
+    var total=current.reduce(function(a,t){ return a+t.length; },0);
+    var head=(d.getMonth()+1)+'월 '+d.getDate()+'일 팀 편성 ('+total+'명)';
+    var body=current.map(function(tm,i){
+      var sum=0; tm.forEach(function(m){ sum+=power(m); });
+      var title = showStats
+        ? TEAMS[i].label+' ('+tm.length+'명 · 전력 '+sum.toFixed(0)+')'
+        : TEAMS[i].label+' ('+tm.length+'명)';
+      return TEAMS[i].emoji+' '+title+'\n'+
+        tm.slice().sort(orderFor).map(function(m){ return m.name; }).join(', ');
+    }).join('\n\n');
+    return head+'\n\n'+body;
+  }
+
+  function copyText(){
+    var txt=resultText();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(
+        function(){ toast('복사했습니다'); },
+        function(){ fallbackCopy(txt); }
+      );
+    } else fallbackCopy(txt);
+  }
+  function fallbackCopy(txt){
+    var ta=document.createElement('textarea');
+    ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    toast(ok?'복사했습니다':'복사에 실패했습니다. 화면을 캡처해 주세요.');
+  }
+
+  var tt=null;
+  function toast(msg){
+    $toast.textContent=msg;
+    $toast.classList.add('show');
+    clearTimeout(tt);
+    tt=setTimeout(function(){ $toast.classList.remove('show'); },1800);
+  }
+
+  function run(){
+    var n=attending().length;
+    if(n<4){ toast('최소 4명은 있어야 팀을 나눌 수 있습니다.'); return; }
+    var r=makeTeams();
+    showResult(r.teams, r.bad);
+  }
+
+  /* ── 시트 붙여넣기 ────────────────────────────── */
+  var ALIAS = {
+    'position':'pos', 'pos':'pos', '포지션':'pos',
+    'name':'name', '이름':'name',
+    'pt':'pt', '득점':'pt', 'reb':'reb', '리바운드':'reb',
+    'ass':'ass', 'ast':'ass', '어시스트':'ass',
+    'stl':'stl', '스틸':'stl', 'blk':'blk', '블록':'blk',
+    'to':'to', '턴오버':'to',
+    '체력':'sta', 'sta':'sta', 'stamina':'sta',
+    '키':'ht', '신장':'ht', 'height':'ht',
+    '장점':'pro', '단점':'con', '참석여부':'att', '참석':'att'
+  };
+
+  function trim(s){ return String(s==null?'':s).replace(/^\s+|\s+$/g,''); }
+
+  function importPaste(){
+    var raw=trim($paste.value);
+    if(!raw){ toast('붙여넣은 내용이 없습니다.'); return; }
+    var rows=raw.split(/\r?\n/).filter(function(l){ return l.replace(/\s/g,'')!==''; })
+                .map(function(l){ return l.split('\t'); });
+
+    var hIdx=-1, map=null;
+    for(var i=0;i<rows.length && i<5;i++){
+      var m={}, hit=0;
+      rows[i].forEach(function(cellv,ci){
+        var key=ALIAS[trim(cellv).toLowerCase()];
+        if(key && !(key in m)){ m[key]=ci; hit++; }
+      });
+      if(m.name!==undefined && hit>=3){ hIdx=i; map=m; break; }
+    }
+    if(hIdx<0){ toast('헤더(name, position …)를 찾지 못했습니다.'); return; }
+
+    function cell(row,key){
+      return map[key]!==undefined ? trim(row[map[key]]) : '';
+    }
+
+    var out=[];
+    for(var r=hIdx+1;r<rows.length;r++){
+      var row=rows[r];
+      var name=cell(row,'name');
+      if(!name) continue;
+
+      var rec={ id:'m'+name, name:name };
+      ['pt','reb','ass','stl','blk','to','sta','ht'].forEach(function(k){
+        var v=parseFloat(cell(row,k).replace(/[^\d.-]/g,''));
+        rec[k]=isNaN(v)?0:v;
+      });
+      var p=cell(row,'pos').toLowerCase().charAt(0);
+      rec.pos = POS_ORDER.indexOf(p)>=0 ? p : 'f';
+      rec.pro=cell(row,'pro');
+      rec.con=cell(row,'con');
+      rec.here = map.att!==undefined ? cell(row,'att')==='참석' : true;
+      out.push(rec);
+    }
+    if(!out.length){ toast('읽을 수 있는 행이 없습니다.'); return; }
+
+    members=out; save(); render(); renderRules();
+    $result.innerHTML=''; $paste.value='';
+    toast(out.length+'명을 불러왔습니다');
+  }
+
+  /* ── 이벤트 ───────────────────────────────────── */
+  var $statBtn=document.getElementById('statBtn');
+  function applyStatBtn(){
+    $statBtn.textContent = showStats ? '팀 전력 숨기기' : '팀 전력 보기';
+    $statBtn.setAttribute('aria-pressed', showStats?'true':'false');
+    $statBtn.style.background = showStats ? 'var(--paper)' : 'transparent';
+    $statBtn.style.color = showStats ? 'var(--ink)' : 'var(--dim)';
+  }
+  $statBtn.onclick=function(){
+    showStats=!showStats;
+    applyStatBtn(); save(); render();
+    if(current) showResult(current, violations(current, sepPairs()));
+  };
+
+  document.getElementById('allIn').onclick=function(){
+    members.forEach(function(m){ m.here=true; }); save(); render(); renderRules();
+  };
+  document.getElementById('allOut').onclick=function(){
+    members.forEach(function(m){ m.here=false; }); save(); render(); renderRules();
+  };
+  document.getElementById('importBtn').onclick=importPaste;
+  document.getElementById('resetBtn').onclick=function(){
+    members=DEFAULT_ROSTER.map(fromRow); save(); render(); renderRules();
+    $result.innerHTML='';
+    toast('기본 명단으로 되돌렸습니다');
+  };
+
+  function addRule(){
+    var names=$newRule.value.split(/[,·]/).map(trim).filter(function(s){ return s!==''; });
+    if(names.length<2){ toast('두 명 이상 입력해 주세요.'); return; }
+    var unknown=names.filter(function(nm){ return !findMember(nm); });
+    if(unknown.length){ toast('명단에 없는 이름: '+unknown.join(', ')); return; }
+    rules.push(names);
+    $newRule.value='';
+    save(); render(); renderRules();
+    toast('규칙을 추가했습니다');
+  }
+  document.getElementById('addRule').onclick=addRule;
+  $newRule.onkeydown=function(e){ if(e.key==='Enter') addRule(); };
+
+  var $newBond=document.getElementById('newBond');
+  function addBond(){
+    var names=$newBond.value.split(/[,+·]/).map(trim).filter(function(s){ return s!==''; });
+    if(names.length<2){ toast('두 명 이상 입력해 주세요.'); return; }
+    var unknown=names.filter(function(nm){ return !findMember(nm); });
+    if(unknown.length){ toast('명단에 없는 이름: '+unknown.join(', ')); return; }
+    bonds.push(names);
+    $newBond.value='';
+    save(); render(); renderRules();
+    toast('규칙을 추가했습니다');
+  }
+  document.getElementById('addBond').onclick=addBond;
+  $newBond.onkeydown=function(e){ if(e.key==='Enter') addBond(); };
+
+  document.getElementById('w_bond').oninput=function(){
+    bondStrength=+this.value;
+    document.getElementById('v_bond').textContent=bondStrength;
+    save();
+  };
+  document.getElementById('w_syn').oninput=function(){
+    synergyPower=+this.value;
+    document.getElementById('v_syn').textContent=synergyPower;
+    save();
+  };
+
+  $go.onclick=run;
+
+  function boot(){
+    document.getElementById('w_bond').value=bondStrength;
+    document.getElementById('v_bond').textContent=bondStrength;
+    document.getElementById('w_syn').value=synergyPower;
+    document.getElementById('v_syn').textContent=synergyPower;
+    applyStatBtn();
+    renderWeights(); render(); renderRules();
+  }
+  load();
+})();
+</script>
