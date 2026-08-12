@@ -81,6 +81,21 @@
   .name{font-weight:600;font-size:15px;color:inherit}
   .lock{font-size:10px;color:var(--mark);font-weight:700}
   .ht{font-family:var(--num);font-size:11px;color:inherit;opacity:.75}
+  .gdel{margin-left:8px;border:0;background:none;color:inherit;opacity:.55;
+    font-size:17px;line-height:1;cursor:pointer;padding:0 2px}
+  .gdel:hover{opacity:1;color:var(--red)}
+
+  .guest{display:flex;gap:6px;margin-top:10px}
+  .guest input{flex:1;min-width:0;font-family:var(--body);font-size:14px;padding:9px 10px;
+    border:1px solid var(--line);background:#1B2123;color:var(--paper)}
+  .guest select{font-family:var(--body);font-size:13px;padding:9px 6px;
+    border:1px solid var(--line);background:#1B2123;color:var(--paper)}
+  .guest button{font-family:var(--body);font-weight:700;font-size:13px;padding:9px 12px;
+    border:0;background:var(--mark);color:#12161A;cursor:pointer;white-space:nowrap}
+  .guest :focus-visible{outline:2px solid var(--mark);outline-offset:1px}
+  .member.guest-row{border-left-style:dashed}
+  .gtag{font-size:10px;font-weight:700;color:var(--mark)}
+  .member.in .gtag{color:var(--markDark)}
 
   .io{margin-top:16px}
   .io summary{font-size:13px;font-weight:700;cursor:pointer;padding:8px 0;color:var(--dim)}
@@ -176,6 +191,21 @@
   </div>
 
   <ul id="list"></ul>
+
+  <div class="guest">
+    <input id="gName" placeholder="게스트 이름" maxlength="12" autocomplete="off">
+    <select id="gPos" aria-label="포지션">
+      <option value="g">가드</option>
+      <option value="f">포워드</option>
+      <option value="c">센터</option>
+    </select>
+    <select id="gLv" aria-label="수준">
+      <option value="1">상</option>
+      <option value="0" selected>중</option>
+      <option value="-1">하</option>
+    </select>
+    <button type="button" id="gAdd">게스트 추가</button>
+  </div>
 
   <details class="io" id="ruleBox">
     <summary>같은 팀 금지 규칙 <span id="ruleCount"></span></summary>
@@ -462,7 +492,7 @@
 
       grp.forEach(function(m){
         var li=document.createElement('li');
-        li.className='member '+(m.here?'in':'out');
+        li.className='member '+(m.here?'in':'out')+(m.guest?' guest-row':'');
         li.tabIndex=0;
         li.setAttribute('role','checkbox');
         li.setAttribute('aria-checked', m.here?'true':'false');
@@ -474,7 +504,22 @@
           '<span class="name"></span>'+
           (locked[m.name]?'<span class="lock">분리</span>':'')+
           (tied[m.name]?'<span class="lock" style="color:#6FBF7C">결합</span>':'')+
+          (m.guest?'<span class="gtag">게스트</span>':'')+
           '<span class="ht">'+m.ht+'</span>';
+
+        if(m.guest){
+          var gd=document.createElement('button');
+          gd.type='button';
+          gd.className='gdel';
+          gd.textContent='\u00D7';
+          gd.setAttribute('aria-label',m.name+' 삭제');
+          gd.onclick=function(e){
+            e.stopPropagation();
+            members=members.filter(function(x){ return x.id!==m.id; });
+            save(); render(); renderRules();
+          };
+          li.appendChild(gd);
+        }
         li.querySelector('.name').textContent=m.name;
 
         function toggle(){ m.here=!m.here; save(); render(); renderRules(); }
@@ -918,7 +963,8 @@
     }
     if(!out.length){ toast('읽을 수 있는 행이 없습니다.'); return; }
 
-    members=out; save(); render(); renderRules();
+    var keepGuests=members.filter(function(m){ return m.guest; });
+    members=out.concat(keepGuests); save(); render(); renderRules();
     $result.innerHTML=''; $paste.value='';
     toast(out.length+'명을 불러왔습니다');
   }
@@ -960,6 +1006,43 @@
     save(); render(); renderRules();
     toast('규칙을 추가했습니다');
   }
+  // 게스트: 참석자 능력치 중앙값을 기준으로 수준(상/중/하)만 반영
+  function makeGuest(name,pos,lv){
+    var base=members.filter(function(m){ return m.here && !m.guest; });
+    if(!base.length) base=members.filter(function(m){ return !m.guest; });
+
+    function mid(k){
+      if(!base.length) return k==='ht' ? 178 : (k==='sta' ? 80 : 10);
+      var v=base.map(function(m){ return m[k]; }).sort(function(a,b){ return a-b; });
+      return v[Math.floor(v.length/2)];
+    }
+    // 상 +25%, 하 -25%
+    var f = 1 + lv*0.25;
+    var g={ id:'g'+Date.now().toString(36), name:name, pos:pos, guest:true,
+            pro:'', con:'', here:true, ht:mid('ht') };
+    ['pt','reb','ass','stl','blk','sta'].forEach(function(k){
+      g[k]=Math.max(0, Math.round(mid(k)*f));
+    });
+    g.to = Math.max(0, Math.round(mid('to')*(1-lv*0.25)));   // 수준이 높을수록 실책 적게
+    return g;
+  }
+
+  var $gName=document.getElementById('gName');
+  function addGuest(){
+    var name=trim($gName.value);
+    if(!name){ $gName.focus(); return; }
+    if(findMember(name)){ toast('같은 이름이 이미 있습니다.'); return; }
+    members.push(makeGuest(name,
+      document.getElementById('gPos').value,
+      parseInt(document.getElementById('gLv').value,10)));
+    $gName.value='';
+    save(); render(); renderRules();
+    $gName.focus();
+    toast(name+' 추가');
+  }
+  document.getElementById('gAdd').onclick=addGuest;
+  $gName.onkeydown=function(e){ if(e.key==='Enter') addGuest(); };
+
   document.getElementById('addRule').onclick=addRule;
   $newRule.onkeydown=function(e){ if(e.key==='Enter') addRule(); };
 
